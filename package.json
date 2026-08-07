@@ -1,0 +1,83 @@
+{
+  "name": "ble-closer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BLECloser desktop application",
+  "main": "out-electron/electron/main/index.js",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:renderer": "vite",
+    "dev:electron": "tsc -p tsconfig.electron.json -w --preserveWatchOutput",
+    "build": "node scripts/build.mjs",
+    "build:renderer": "vite build",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.electron.json --noEmit",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.62.11",
+    "clsx": "^2.1.1",
+    "electron-store": "^9.0.0",
+    "framer-motion": "^11.11.10",
+    "lucide-react": "^0.453.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "recharts": "^2.13.0",
+    "tailwind-merge": "^2.5.4",
+    "zustand": "^5.0.0"
+  },
+  "optionalDependencies": {
+    "@abandonware/noble": "^1.9.2-26"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "electron": "^32.3.3",
+    "electron-builder": "^25.1.8",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  },
+  "build": {
+    "appId": "com.blecloser.app",
+    "productName": "BLECloser",
+    "asar": true,
+    "npmRebuild": false,
+    "nodeGypRebuild": false,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**",
+      "out-electron/**",
+      "package.json"
+    ],
+    "extraMetadata": {
+      "main": "out-electron/electron/main/index.js"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "icon": "build/icon.png"
+  }
+}
