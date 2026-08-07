@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Copy, Pin, Radio, Star, Waves } from 'lucide-react';
 import type { BluetoothDevice } from '../../../shared/types';
 import { Badge, Button, Card, Input, Textarea } from '../ui/primitives';
@@ -14,7 +15,11 @@ export function DeviceDetails({ device }: { device: BluetoothDevice | null }) {
   const favorite = useFavoritesStore((state) => (device ? state.favorites[device.id] : undefined));
   const updateFavorite = useFavoritesStore((state) => state.updateFavorite);
   const setTrackedDeviceId = useBluetoothStore((state) => state.setTrackedDeviceId);
-  const entries = useHistoryStore((state) => state.entries.filter((entry) => (device ? entry.deviceId === device.id : false)));
+  const allEntries = useHistoryStore((state) => state.entries);
+  const entries = useMemo(
+    () => (device ? allEntries.filter((entry) => entry.deviceId === device.id) : []),
+    [allEntries, device],
+  );
 
   if (!device) {
     return (

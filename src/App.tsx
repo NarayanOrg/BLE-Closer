@@ -22,11 +22,11 @@ export function App() {
         <Bootstrapper />
         <Routes>
           <Route element={<AppShell />}>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/favorites" element={<FavoritesPage />} />
-            <Route path="/history" element={<HistoryPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/about" element={<AboutPage />} />
+            <Route index element={<DashboardPage />} />
+            <Route path="favorites" element={<FavoritesPage />} />
+            <Route path="history" element={<HistoryPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="about" element={<AboutPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

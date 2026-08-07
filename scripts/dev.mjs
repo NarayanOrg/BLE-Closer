@@ -2,10 +2,10 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import electronBinary from 'electron';
 
 const root = process.cwd();
 const electronOut = path.join(root, 'out-electron', 'electron', 'main', 'index.js');
-const electronBinary = path.join(root, 'node_modules', 'electron', 'dist', 'electron.exe');
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
 function run(command, args, options = {}) {
