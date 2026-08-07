@@ -72,6 +72,7 @@ export interface BluetoothSnapshot {
   scanning: boolean;
   startedAt: string | null;
   devices: BluetoothDevice[];
+  driverLoadError: string | null;
 }
 
 export interface AppSnapshot {

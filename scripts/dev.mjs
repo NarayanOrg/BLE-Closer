@@ -30,9 +30,16 @@ function run(command, args, options = {}) {
 const startElectron = async () => {
   run(npmCommand, ['run', 'build:electron']);
   run(npmCommand, ['run', 'dev:renderer']);
+  console.log('[dev] Waiting for first Electron build to finish...');
+  let waited = 0;
   while (!fs.existsSync(electronOut)) {
     await new Promise((resolve) => setTimeout(resolve, 250));
+    waited += 250;
+    if (waited % 2000 === 0) {
+      console.log(`[dev] Still waiting on electron build output... (${(waited / 1000).toFixed(0)}s)`);
+    }
   }
+  console.log('[dev] Build output found, launching Electron.');
   run(electronBinary, [electronOut], {
     env: {
       ...process.env,

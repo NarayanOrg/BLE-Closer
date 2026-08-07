@@ -26,6 +26,7 @@ function createBrowserSnapshot(): AppSnapshot {
       scanning: false,
       startedAt: null,
       devices: [],
+      driverLoadError: 'Running in a browser tab: native Bluetooth access requires the Electron desktop app.',
     },
   };
 }

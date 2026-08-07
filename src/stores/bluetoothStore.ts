@@ -37,6 +37,7 @@ export const useBluetoothStore = create<BluetoothStoreState>((set) => ({
       startedAt: snapshot.startedAt,
       devices: Object.fromEntries(snapshot.devices.map((device) => [device.id, device])),
       selectedDeviceId: snapshot.devices[0]?.id ?? null,
+      error: snapshot.driverLoadError,
     }),
   upsertDevice: (device) =>
     set((state) => ({
