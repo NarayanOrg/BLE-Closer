@@ -15,7 +15,7 @@ function getRendererUrl(): string {
   }
 
   const appRoot = path.resolve(app.getAppPath(), '../../..');
-  return pathToFileURL(path.join(appRoot, 'dist', 'renderer', 'index.html')).toString();
+  return pathToFileURL(path.join(appRoot, 'dist', 'index.html')).toString();
 }
 
 async function createAppWindow(): Promise<void> {

@@ -2,7 +2,7 @@ import type { AppSnapshot, BluetoothEvent, StoreValueMap } from '../../shared/ty
 
 declare global {
   interface Window {
-    bleCloser: {
+    bleCloser?: {
       getBootstrap: () => Promise<AppSnapshot>;
       startScan: () => Promise<void>;
       stopScan: () => Promise<void>;

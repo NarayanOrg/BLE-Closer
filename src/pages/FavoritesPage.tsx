@@ -1,10 +1,12 @@
+import { useMemo } from 'react';
 import { Card, Badge, Button, Textarea } from '../components/ui/primitives';
 import { useFavoritesStore } from '../stores/favoritesStore';
 import { useBluetoothStore } from '../stores/bluetoothStore';
 import { formatDateTime } from '../lib/datetime';
 
 export function FavoritesPage() {
-  const favorites = useFavoritesStore((state) => Object.values(state.favorites));
+  const favoritesMap = useFavoritesStore((state) => state.favorites);
+  const favorites = useMemo(() => Object.values(favoritesMap), [favoritesMap]);
   const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
   const devices = useBluetoothStore((state) => state.devices);
   const selectDevice = useBluetoothStore((state) => state.selectDevice);

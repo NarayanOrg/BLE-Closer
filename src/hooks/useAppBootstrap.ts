@@ -78,11 +78,11 @@ export function useAppBootstrap(): void {
           }
           if (useBluetoothStore.getState().trackedDeviceId === event.payload.id) {
             if (!appearedNotificationRef.current[event.payload.id] && useSettingsStore.getState().settings.notificationsEnabled) {
-              window.bleCloser.notify('Tracked device appeared', `${event.payload.name} is back in range.`);
+              bridge.notify('Tracked device appeared', `${event.payload.name} is back in range.`);
               appearedNotificationRef.current[event.payload.id] = true;
             }
             if (!strongNotificationRef.current[event.payload.id] && event.payload.rssi >= -60 && useSettingsStore.getState().settings.notificationsEnabled) {
-              window.bleCloser.notify('Signal is strong', `${event.payload.name} is now ${event.payload.rssi} dBm.`);
+              bridge.notify('Signal is strong', `${event.payload.name} is now ${event.payload.rssi} dBm.`);
               strongNotificationRef.current[event.payload.id] = true;
             }
           }
@@ -93,7 +93,7 @@ export function useAppBootstrap(): void {
             useSettingsStore.getState().settings.notificationsEnabled &&
             useBluetoothStore.getState().trackedDeviceId === event.payload.id
           ) {
-            window.bleCloser.notify('Device disappeared', `Signal lost for ${event.payload.id}`);
+            bridge.notify('Device disappeared', `Signal lost for ${event.payload.id}`);
           }
           appearedNotificationRef.current[event.payload.id] = false;
           strongNotificationRef.current[event.payload.id] = false;
@@ -103,7 +103,7 @@ export function useAppBootstrap(): void {
           return;
         case 'notification':
           if (useSettingsStore.getState().settings.notificationsEnabled && 'Notification' in window) {
-            window.bleCloser.notify(event.payload.title, event.payload.body);
+            bridge.notify(event.payload.title, event.payload.body);
           }
           return;
       }

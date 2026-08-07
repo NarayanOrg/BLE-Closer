@@ -10,6 +10,23 @@ import { bridge } from '../../services/bridge';
 import { useFavoritesStore } from '../../stores/favoritesStore';
 import { useEffect } from 'react';
 
+function adapterStateLabel(state: string): string {
+  switch (state) {
+    case 'poweredOn':
+      return 'Ready';
+    case 'poweredOff':
+      return 'Bluetooth is off';
+    case 'unauthorized':
+      return 'Access denied';
+    case 'unsupported':
+      return 'Unavailable';
+    case 'resetting':
+      return 'Resetting…';
+    default:
+      return 'Initializing…';
+  }
+}
+
 function NavItem({
   to,
   icon: Icon,
@@ -38,7 +55,7 @@ function NavItem({
 export function AppShell() {
   const navigate = useNavigate();
   const { sidebarCollapsed, setSidebarCollapsed, commandPaletteOpen, setCommandPaletteOpen } = useUiStore();
-  const { adapterState, scanning, startedAt, devices, searchQuery, setSearchQuery } = useBluetoothStore();
+  const { adapterState, scanning, startedAt, devices, searchQuery, setSearchQuery, error } = useBluetoothStore();
   const favoriteCount = useFavoritesStore((state) => Object.keys(state.favorites).length);
   const deviceCount = Object.keys(devices).length;
   const version = '1.0.0';
@@ -94,7 +111,7 @@ export function AppShell() {
                 <>
                   <div className="rounded-2xl bg-slate-50 p-4">
                     <div className="text-xs uppercase tracking-[0.24em] text-slate-500">Bluetooth Status</div>
-                    <div className="mt-2 text-sm font-medium">{adapterState}</div>
+                    <div className="mt-2 text-sm font-medium">{adapterStateLabel(adapterState)}</div>
                     <div className="mt-1 text-xs text-slate-500">
                       {scanning ? `Scanning since ${startedAt ? formatRelativeTime(startedAt) : 'now'}` : 'Scan idle'}
                     </div>
@@ -125,6 +142,17 @@ export function AppShell() {
         </aside>
 
         <main className="flex min-w-0 flex-1 flex-col">
+          {error && (
+            <Card className="mb-5 border-amber-300 bg-amber-50">
+              <div className="flex items-start gap-3">
+                <ShieldAlert className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-600" />
+                <div>
+                  <div className="text-sm font-semibold text-amber-900">Bluetooth scanning is unavailable</div>
+                  <div className="mt-1 text-sm text-amber-800">{error}</div>
+                </div>
+              </div>
+            </Card>
+          )}
           <header className="mb-5">
             <Card className="flex items-center gap-3 border-slate-200/90 bg-white/80">
               <Input

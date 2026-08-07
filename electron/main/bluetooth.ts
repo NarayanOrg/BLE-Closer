@@ -26,11 +26,12 @@ interface NobleModule {
   stopScanning: () => void;
 }
 
-function loadNoble(): NobleModule | null {
+function loadNoble(): { noble: NobleModule | null; error: string | null } {
   try {
-    return require('@abandonware/noble') as NobleModule;
-  } catch {
-    return null;
+    return { noble: require('@abandonware/noble') as NobleModule, error: null };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return { noble: null, error: message };
   }
 }
 
@@ -70,7 +71,8 @@ function formatName(peripheral: NoblePeripheral): string {
 }
 
 export class BluetoothScannerService extends EventEmitter {
-  private readonly noble = loadNoble();
+  private readonly noble: NobleModule | null;
+  private readonly loadError: string | null;
   private readonly devices = new Map<string, BluetoothDevice>();
   private readonly missingTimers = new Map<string, NodeJS.Timeout>();
   private shouldScan = false;
@@ -80,6 +82,10 @@ export class BluetoothScannerService extends EventEmitter {
 
   constructor() {
     super();
+    const loaded = loadNoble();
+    this.noble = loaded.noble;
+    this.loadError = loaded.error;
+
     if (!this.noble) {
       this.adapterState = 'unsupported';
       return;
@@ -163,7 +169,15 @@ export class BluetoothScannerService extends EventEmitter {
 
   async start(): Promise<void> {
     this.shouldScan = true;
-    if (!this.noble || this.adapterState !== 'poweredOn') {
+    if (!this.noble) {
+      this.emit(
+        'error',
+        'Cannot start scanning: Bluetooth hardware access is unavailable on this build (native driver not loaded).',
+      );
+      return;
+    }
+    if (this.adapterState !== 'poweredOn') {
+      this.emit('error', `Cannot start scanning: Bluetooth adapter state is "${this.adapterState}", not powered on.`);
       return;
     }
     try {
@@ -193,6 +207,7 @@ export class BluetoothScannerService extends EventEmitter {
       scanning: this.scanning,
       startedAt: this.startedAt,
       devices: [...this.devices.values()].sort((a, b) => b.rssi - a.rssi),
+      driverLoadError: this.loadError,
     };
   }
 
